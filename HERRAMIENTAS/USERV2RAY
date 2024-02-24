@@ -1,4 +1,8 @@
 #!/bin/bash
+bar="\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"              
+bar2="\033[0;31m=============================================\033[0m"
+bar3="\033[0;31m---------------------------------------------\033[0m"
+bar4="\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 #====================================================
 #	@jorgemodxd
 #====================================================
@@ -459,8 +463,9 @@ msg17='\033[1;37m\033[1;33m(Sem imformação - Para Cancelar Digite CRTL + C)\03
 		while true $x != "ok"; do
 			[[ ! -e '/home/sshplus' ]] && exit 0
 			clear
-			echo -e "\E[44;1;37m                ADMINISTRADOR V2RAY                 \E[0m\n"
-
+			echo -e $bar4
+            echo -e "\E[3;32m          >>>>   ADMINISTRADOR DE USUARIOS V2RAY   <<<<          \E[0m"
+            echo -e $bar4
 			xv2ray1=`if netstat -tunlp |grep v2ray 1> /dev/null 2> /dev/null; then
 			echo -e "\e[92m ATIVADO"
 			else
@@ -472,8 +477,7 @@ msg17='\033[1;37m\033[1;33m(Sem imformação - Para Cancelar Digite CRTL + C)\03
 			else
 			echo -e "\033[1;31m○ "
 			fi`;          
-			echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-			echo ""
+			echo -e $bar4
 			echo -e "\033[1;31m[\033[1;36m01\033[1;31m] \033[1;37m• \033[1;33mAGREGAR USUARIOS UUID\033[1;31m
 [\033[1;36m02\033[1;31m] \033[1;37m• \033[1;33mELIMINAR USUARIO UUID\033[1;31m
 [\033[1;36m03\033[1;31m] \033[1;37m• \033[1;33mMOSTRAR USUARIOS REGISTRADOS\033[1;31m
@@ -482,12 +486,10 @@ msg17='\033[1;37m\033[1;33m(Sem imformação - Para Cancelar Digite CRTL + C)\03
 [\033[1;36m06\033[1;31m] \033[1;37m• \033[1;33mLIMITADOR POR CONSUMO\e[91m ( BETA x PORT )\033[1;31m
 [\033[1;36m07\033[1;31m] \033[1;37m• \033[1;33mLIMPIADOR DE EXPIRADOS ---- $statgen\033[1;31m
 [\033[1;36m0\033[1;31m] \033[1;37m•  \e[97m\033[1;41mVOLVER \033[1;32m<\033[1;33m<\033[1;31m< \033[1;31m"
-
-			echo ""
-			echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+			echo -e $bar4
 			echo ""
 			tput civis
-			echo -ne "\033[1;32mOQUE DESEJA FAZER \033[1;33m?\033[1;31m?\033[1;37m "
+			echo -ne "\033[1;32m➜ INGRESE UNA OPCION: \033[1;37m "
 			read x
 			tput cnorm
 			clear
@@ -529,4 +531,3 @@ msg17='\033[1;37m\033[1;33m(Sem imformação - Para Cancelar Digite CRTL + C)\03
     fun_v2raymanager
 
 }
-
