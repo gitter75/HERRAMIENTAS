@@ -487,7 +487,6 @@ msg17='\033[1;37m\033[1;33m(Sem imformação - Para Cancelar Digite CRTL + C)\03
 [\033[1;36m07\033[1;31m] \033[1;37m• \033[1;33mLIMPIADOR DE EXPIRADOS ----$statgen\033[1;31m
 [\033[1;36m0\033[1;31m] \033[1;37m•  \e[97m\033[1;41mVOLVER \033[1;32m<\033[1;33m<\033[1;31m< \033[1;31m"
 			echo -e $bar4
-			echo ""
 			tput civis
 			echo -ne "\033[1;32m➜ INGRESE UNA OPCION: \033[1;37m "
 			read x
