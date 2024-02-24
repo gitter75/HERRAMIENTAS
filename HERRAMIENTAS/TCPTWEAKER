@@ -1,0 +1,70 @@
+#!/bin/bash
+bar="\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"              
+bar2="\033[0;31m=============================================\033[0m"
+bar3="\033[0;31m---------------------------------------------\033[0m"
+bar4="\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+bar5="\033[0;31m==================================================\033[0m"
+
+    echo -e $bar4
+    echo -e "\E[3;32m          >>>>   TCP TWEAKER 1.0   <<<<          \E[0m"
+    echo -e $bar4
+if [[ `grep -c "^#PH56" /etc/sysctl.conf` -eq 1 ]]
+then
+	echo -e $bar5
+    echo -e "\E[3;32m>>>>   TCP TWEAKER YA SE ENCUENTRA INSTALADO   <<<          \E[0m"
+    echo -e $bar5
+	read -p "➜¿Desea eliminarlo? [s/n]: " -e -i n resposta0
+	if [[ "$resposta0" = 's' ]]; then
+		grep -v "^#PH56
+net.ipv4.tcp_window_scaling = 1
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 16384 16777216
+net.ipv4.tcp_low_latency = 1
+net.ipv4.tcp_slow_start_after_idle = 0" /etc/sysctl.conf > /tmp/syscl && mv /tmp/syscl /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf > /dev/null
+		echo ""
+		echo "➜TCP Tweaker fue eliminado con exito."
+		echo -e $bar
+	exit
+	else 
+		echo ""
+		exit
+	fi
+else
+	echo ""
+	echo -e $bar5
+	echo "➜Este cript se encuentra en fase beta"
+	echo "➜Esta a punto de modificar valores del vps"
+	echo "➜Para mejorar latencias y velocidad de internet."
+	echo -e $bar5
+	read -p "➜ ¿Continuar con la instalacion? [s/n]: " -e -i n resposta
+	if [[ "$resposta" = 's' ]]; then
+	clear
+	echo ""
+	echo -e $bar5
+	echo "➜ Se modificaron los siguientes parametros:"
+	echo -e $bar5
+	echo " " >> /etc/sysctl.conf
+	echo "#PH56" >> /etc/sysctl.conf
+echo "➜ net.ipv4.tcp_window_scaling = 1
+➜ net.core.rmem_max = 16777216
+➜ net.core.wmem_max = 16777216
+➜ net.ipv4.tcp_rmem = 4096 87380 16777216
+➜ net.ipv4.tcp_wmem = 4096 16384 16777216
+➜ net.ipv4.tcp_low_latency = 1
+➜ net.ipv4.tcp_slow_start_after_idle = 0" >> /etc/sysctl.conf
+
+echo ""
+sysctl -p /etc/sysctl.conf
+		echo -e $bar4
+		echo "➜ A instalado TCP Tweaker con exito."
+		echo -e $bar4
+	else
+		clear
+		echo "➜ Instalacion cancelada."
+		echo -e $bar
+	fi
+fi
+exit

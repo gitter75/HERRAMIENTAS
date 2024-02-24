@@ -1,0 +1,429 @@
+#!/bin/bash
+#06/02/2022
+declarar -A cor=( [0]="\033[1;37m" [1]="\033[1;34m" [2]="\033[1;31m" [3]="\033[ 1;33m" [4]="\033[1;32m" )
+pid_fail=$(dpkg -l | grep fail2ban | grep ii)
+apache=$(dpkg -l | grep apache2 | grep ii)
+calamar=$(dpkg -l | grep calamar | grep ii)
+dropbear=$(dpkg -l | grep dropbear | grep ii)
+openssh=$(dpkg -l | grep openssh | grep ii)
+stunnel4=$(dpkg -l | grep stunnel4 | grep ii)
+[[ "$openssh" != "" ]] && s1="ssh"
+[[ "$calamar" != "" ]] && s2="calamar"
+[[ "$dropbear" != "" ]] && s3="dropbear"
+[[ "$apache" != "" ]] && s4="apache"
+[[ "$stunnel4" != "" ]] && s5="stunnel4"
+claro
+echo -e "\e[93m -- Protección Fail2ban v0.11.2 -- "
+echo -e "\e[97m Anti ataques DDOS y suplantación de SPAM"
+barra de mensajes
+si [[ ! -z "$pid_fail" ]]; entonces
+ echo -e "${cor[2]} [1] >${cor[5]} $(fun_trans "Desinstalar Fail2ban")"
+ echo -e "${cor[2]} [2] >\e[92m $(fun_trans "Mirar el registro")"
+ barra de mensajes
+  mientras [[ -z ${logxyz} || ${logxyz} != @(1|2) ]]; hacer
+   echo -ne "\033[1;37m$(fun_trans "Seleccione una opción"): " && leer logxyz
+   tput cuu1 && tput dl1
+  hecho
+ caso ${logxyz} en
+  1)apt-get eliminar fail2ban -y &> /dev/null;;
+  2)gato /var/log/fail2ban.log
+    mensaje -barra;;
+ esac
+salir 0
+fi
+echo -e "${cor[5]} ¿Desea instalar Fail2ban?"
+barra de mensajes
+  mientras que [[ -z ${fail2ban} || ${fail2ban} != @(s|S|n|N|y|Y) ]]; hacer
+   echo -ne "\033[1;37m$(fun_trans "Seleccione una opción") [S/N]: " && leer fail2ban
+   tput cuu1 && tput dl1
+  hecho
+si [[ "$fail2ban" = @(s|S|y|Y) ]]; entonces
+apt-get instalar fail2ban -y &> /dev/null
+wget -O $HOME/fail2ban https://github.com/fail2ban/fail2ban/archive/0.11.2.tar.gz &> /dev/null
+tar -xf $HOME/fail2ban &> /dev/null
+cd $HOME/fail2ban-0.11.2 &> /dev/null
+python ./setup.py instalar &> /dev/null
+eco '[INCLUYE]
+antes = rutas-debian.conf
+[POR DEFECTO]
+ignorarip = 127.0.0.1/8
+# ignorarcomando = /ruta/al/comando <ip>
+ignorar comando =
+bantime = 1036800
+tiempo de búsqueda = 3600
+reintento máximo = 5
+backend = automático
+usedns = advertir
+codificación logen = auto
+habilitado = falso
+filtro = %(__nombre__)s
+destemail = root@localhost
+remitente = raíz@localhost
+mta = enviar correo
+protocolo = tcp
+cadena = ENTRADA
+puerto = 0:65535
+fail2ban_agent = Fail2Ban/%(fail2ban_version)s
+banaction = iptables-multipuerto
+banaction_allports = iptables-todos los puertos
+action_ = %(banaction)s[nombre=%(__name__)s, bantime="%(bantime)s", puerto="%(puerto)s", protocolo="%(protocolo)s", cadena="% (cadenas)"]
+action_mw = %(banaction)s[nombre=%(__name__)s, bantime="%(bantime)s", puerto="%(puerto)s", protocolo="%(protocolo)s", cadena="% (cadenas)"]
+            %(mta)s-whois[name=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", protocolo="%(protocol)s", chain="% (cadenas)"]
+action_mwl = %(banaction)s[nombre=%(__name__)s, bantime="%(bantime)s", puerto="%(puerto)s", protocolo="%(protocolo)s", cadena="% (cadenas)"]
+             %(mta)s-whois-lines[nombre=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", logpath=%(logpath)s, chain="% (cadenas)"]
+action_xarf = %(banaction)s[nombre=%(__name__)s, bantime="%(bantime)s", puerto="%(puerto)s", protocolo="%(protocolo)s", cadena="% (cadenas)"]
+             xarf-login-attack[servicio=%(__name__)s, remitente="%(remitente)s", logpath=%(logpath)s, puerto="%(puerto)s"]
+action_cf_mwl = cloudflare[cfuser="%(cfemail)s", cftoken="%(cfapikey)s"]
+                %(mta)s-whois-lines[nombre=%(__name__)s, sender="%(sender)s", dest="%(destemail)s", logpath=%(logpath)s, chain="% (cadenas)"]
+action_blocklist_de = blocklist_de[email="%(sender)s", service=%(filter)s, apikey="%(blocklist_de_apikey)s", agente="%(fail2ban_agent)s"]
+action_badips = badips.py[category="%(__name__)s", banaction="%(banaction)s", agente="%(fail2ban_agent)s"]
+action_badips_report = badips[category="%(__name__)s", agente="%(fail2ban_agent)s"]
+acción = %(action_)s' > /etc/fail2ban/jail.local
+echo -ne "${cor[5]} $(fun_trans "Fail2ban será activo en los Siguientes\n Puertos y Servicios"):"
+eco ""
+barra de mensajes
+eco -ne "\n"
+[ "$s1" != "" ] && eco -ne " $s1"
+[ "$s2" != "" ] && eco -ne " $s2"
+[ "$s3" != "" ] && eco -ne " $s3"
+[ "$s4" != "" ] && echo -ne " $s4"
+[ "$s5" != "" ] && eco -ne " $s5"
+eco -ne "\n"
+eco -ne "\n"
+barra de mensajes
+dormir 1
+si [[ "$s1" != "" ]]; entonces
+eco '[sshd]
+habilitado = verdadero
+puerto = ssh
+ruta de registro = %(sshd_log)s
+backend = %(sshd_backend)s
+[sshd-ddos]
+habilitado = verdadero
+puerto = ssh
+ruta de registro = %(sshd_log)s
+backend = %(sshd_backend)s' >> /etc/fail2ban/jail.local
+demás
+eco '[sshd]
+puerto = ssh
+ruta de registro = %(sshd_log)s
+backend = %(sshd_backend)s
+[sshd-ddos]
+puerto = ssh
+ruta de registro = %(sshd_log)s
+backend = %(sshd_backend)s' >> /etc/fail2ban/jail.local
+fi
+si [[ "$s2" != "" ]]; entonces
+echo '[calamar]
+habilitado = verdadero
+puerto = 80,443,3128,8080
+ruta de registro = /var/log/squid/access.log' >> /etc/fail2ban/jail.local
+demás
+echo '[calamar]
+puerto = 80,443,3128,8080
+ruta de registro = /var/log/squid/access.log' >> /etc/fail2ban/jail.local
+fi
+si [[ "$s3" != "" ]]; entonces
+eco '[dropbear]
+habilitado = verdadero
+puerto = ssh
+ruta de registro = %(dropbear_log)s
+backend = %(dropbear_backend)s' >> /etc/fail2ban/jail.local
+demás
+eco '[dropbear]
+puerto = ssh
+ruta de registro = %(dropbear_log)s
+backend = %(dropbear_backend)s' >> /etc/fail2ban/jail.local
+fi
+si [[ "$s4" != "" ]]; entonces
+eco '[apache-auth]
+habilitado = verdadero
+puerto = http,https
+ruta de registro = %(apache_error_log)s' >> /etc/fail2ban/jail.local
+demás
+eco '[apache-auth]
+puerto = http,https
+ruta de registro = %(apache_error_log)s' >> /etc/fail2ban/jail.local
+fi
+eco '[selinux-ssh]
+puerto = ssh
+ruta de registro = %(auditd_log)s
+[apache-badbots]
+puerto = http,https
+ruta de registro = %(apache_access_log)s
+bantime = 172800
+reintento máximo = 1
+[apache-noscript]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+[apache-se desborda]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+reintento máximo = 2
+[apache-nohome]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+reintento máximo = 2
+[apache-botsearch]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+reintento máximo = 2
+[apache-falsogooglebot]
+puerto = http,https
+ruta de registro = %(apache_access_log)s
+reintento máximo = 1
+ignorecommand = %(ignorecommands_dir)s/apache-fakegooglebot <ip>
+[apache-modsecurity]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+reintento máximo = 2
+[apache-shellshock]
+puerto = http,https
+ruta de registro = %(apache_error_log)s
+reintento máximo = 1
+[openhab-auth]
+filtro = openhab
+acción = iptables-allports[nombre=NoAuthFailures]
+ruta de registro = /opt/openhab/logs/request.log
+[nginx-http-autenticación]
+puerto = http,https
+ruta de registro = %(nginx_error_log)s
+[nginx-límite-req]
+puerto = http,https
+ruta de registro = %(nginx_error_log)s
+[nginx-botsearch]
+puerto = http,https
+ruta de registro = %(nginx_error_log)s
+reintento máximo = 2
+[php-url-fopen]
+puerto = http,https
+ruta de registro = %(nginx_access_log)s
+          %(apache_access_log)s
+[suhosin]
+puerto = http,https
+ruta de registro = %(suhosin_log)s
+[lighttpd-auth]
+puerto = http,https
+ruta de registro = %(lighttpd_error_log)s
+[autenticación de cubo redondo]
+puerto = http,https
+ruta de registro = %(roundcube_errors_log)s
+[correo web abierto]
+puerto = http,https
+ruta de registro = /var/log/openwebmail.log
+[horda]
+puerto = http,https
+ruta de registro = /var/log/horda/horda.log
+[oficina del grupo]
+puerto = http,https
+ruta de registro = /home/groupoffice/log/info.log
+[sogo-autenticación]
+puerto = http,https
+ruta de registro = /var/log/sogo/sogo.log
+[púa20]
+ruta de registro = /var/log/tine20/tine20.log
+puerto = http,https
+[autenticación drupal]
+puerto = http,https
+ruta de registro = %(syslog_daemon)s
+servidor = %(syslog_backend)s
+[guacamole]
+puerto = http,https
+ruta de registro = /var/log/tomcat*/catalina.out
+[monitor]
+#Prohibir a los clientes utilizar la fuerza bruta para iniciar sesión en monit gui
+puerto = 2812
+ruta de registro = /var/log/monit
+[autenticación webmin]
+puerto = 10000
+ruta de registro = %(syslog_authpriv)s
+servidor = %(syslog_backend)s
+[froxlor-auth]
+puerto = http,https
+ruta de registro = %(syslog_authpriv)s
+servidor = %(syslog_backend)s
+[3proxy]
+puerto = 3128
+ruta de registro = /var/log/3proxy.log
+[proftpd]
+puerto = ftp,ftp-datos,ftps,ftps-datos
+ruta de registro = %(proftpd_log)s
+backend = %(proftpd_backend)s
+[puro-ftpd]
+puerto = ftp,ftp-datos,ftps,ftps-datos
+ruta de registro = %(pureftpd_log)s
+backend = %(pureftpd_backend)s
+[gssftpd]
+puerto = ftp,ftp-datos,ftps,ftps-datos
+ruta de registro = %(syslog_daemon)s
+servidor = %(syslog_backend)s
+[wuftpd]
+puerto = ftp,ftp-datos,ftps,ftps-datos
+ruta de registro = %(wuftpd_log)s
+backend = %(wuftpd_backend)s
+[vsftpd]
+puerto = ftp,ftp-datos,ftps,ftps-datos
+ruta de registro = %(vsftpd_log)s
+[assp]
+puerto = smtp,465,envío
+ruta de registro = /root/ruta/a/assp/logs/maillog.txt
+[mensajería-smtp]
+puerto = smtp,465,envío
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[sufijo]
+puerto = smtp,465,envío
+ruta de registro = %(postfix_log)s
+backend = %(postfix_backend)s
+[postfix-rbl]
+puerto = smtp,465,envío
+ruta de registro = %(postfix_log)s
+backend = %(postfix_backend)s
+reintento máximo = 1
+[autenticación de correo electrónico]
+puerto = envío, 465, smtp
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[enviar correo-rechazar]
+puerto = smtp,465,envío
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[qmail-rbl]
+filtro = qmail
+puerto = smtp,465,envío
+ruta de registro = /servicio/qmail/log/main/current
+[palomar]
+puerto = pop3,pop3s,imap,imaps,presentación,465,tamiz
+ruta de registro = %(dovecot_log)s
+backend = %(dovecot_backend)s
+[tamiz]
+puerto = smtp,465,envío
+ruta de registro = %(dovecot_log)s
+backend = %(dovecot_backend)s
+[solid-pop3d]
+puerto = pop3, pop3s
+ruta de registro = %(solidpop3d_log)s
+[exim]
+puerto = smtp,465,envío
+ruta de registro = %(exim_main_log)s
+[exim-spam]
+puerto = smtp,465,envío
+ruta de registro = %(exim_main_log)s
+[kerio]
+puerto = imap,smtp,imaps,465
+ruta de registro = /opt/kerio/mailserver/store/logs/security.log
+[autenticación de mensajería]
+puerto = smtp,465,envío,imap3,imaps,pop3,pop3s
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[postfix-sasl]
+puerto = smtp,465,envío,imap3,imaps,pop3,pop3s
+ruta de registro = %(postfix_log)s
+backend = %(postfix_backend)s
+[perdición]
+puerto = imap3,imaps,pop3,pop3s
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[correo de ardilla]
+puerto = smtp,465,envío,imap2,imap3,imaps,pop3,pop3s,http,https,socks
+ruta de registro = /var/lib/squirrelmail/prefs/squirrelmail_access_log
+[cyrus-imap]
+puerto = imap3,imaps
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[uwimap-auth]
+puerto = imap3,imaps
+ruta de registro = %(syslog_mail)s
+servidor = %(syslog_backend)s
+[nombrado-rechazado]
+puerto = dominio, 953
+ruta de registro = /var/log/named/security.log
+[nsd]
+puerto = 53
+acción = %(banaction)s[nombre=%(__name__)s-tcp, puerto="%(puerto)s", protocolo="tcp", cadena="%(chain)s", nombreact=%(banaction) s-tcp]
+           %(banaction)s[nombre=%(__name__)s-udp, puerto="%(puerto)s", protocolo="udp", cadena="%(chain)s", actname=%(banaction)s- udp]
+ruta de registro = /var/log/nsd.log
+[asterisco]
+puerto = 5060,5061
+acción = %(banaction)s[nombre=%(__name__)s-tcp, puerto="%(puerto)s", protocolo="tcp", cadena="%(chain)s", nombreact=%(banaction) s-tcp]
+           %(banaction)s[nombre=%(__name__)s-udp, puerto="%(puerto)s", protocolo="udp", cadena="%(chain)s", actname=%(banaction)s- udp]
+           %(mta)s-whois[nombre=%(__name__)s, dest="%(destemail)s"]
+logpath = /var/log/asterisk/mensajes
+reintento máximo = 10
+[cambio libre]
+puerto = 5060,5061
+acción = %(banaction)s[nombre=%(__name__)s-tcp, puerto="%(puerto)s", protocolo="tcp", cadena="%(chain)s", nombreact=%(banaction) s-tcp]
+           %(banaction)s[nombre=%(__name__)s-udp, puerto="%(puerto)s", protocolo="udp", cadena="%(chain)s", actname=%(banaction)s- udp]
+           %(mta)s-whois[nombre=%(__name__)s, dest="%(destemail)s"]
+ruta de registro = /var/log/freeswitch.log
+reintento máximo = 10
+[autenticación mysqld]
+puerto = 3306
+ruta de registro = %(mysql_log)s
+servidor = %(mysql_backend)s
+[recidivante]
+ruta de registro = /var/log/fail2ban.log
+banacción = %(banaction_allports)s
+bantime = 604800 ; 1 semana
+tiempo de búsqueda = 86400; 1 día
+[pam-genérico]
+banacción = %(banaction_allports)s
+ruta de registro = %(syslog_authpriv)s
+servidor = %(syslog_backend)s
+[xinetd-falla]
+banaction = iptables-multipuerto-log
+ruta de registro = %(syslog_daemon)s
+servidor = %(syslog_backend)s
+reintento máximo = 2
+[túnel]
+ruta de registro = /var/log/stunnel4/stunnel.log
+[jabberd-auth]
+puerto = 5222
+ruta de registro = /var/log/ejabberd/ejabberd.log
+[contraataque]
+ruta de registro = /opt/cstrike/logs/L[0-9]*.log
+# Cortafuegos: http://www.cstrike-planet.com/faq/6
+tcport = 27030,27031,27032,27033,27034,27035,27036,27037,27038,27039
+udport = 1200,27000,27001,27002,27003,27004,27005,27006,27007,27008,27009,27010,27011,27012,27013,27014,27015
+acción = %(banaction)s[nombre=%(__name__)s-tcp, puerto="%(tcpport)s", protocolo="tcp", cadena="%(chain)s", nombreact=%(banaction) s-tcp]
+           %(banaction)s[nombre=%(__name__)s-udp, puerto="%(udpport)s", protocolo="udp", cadena="%(chain)s", actname=%(banaction)s- udp]
+[nagios]
+ruta de registro = %(syslog_daemon)s; nrpe.cfg puede definir una instalación de registro diferente
+servidor = %(syslog_backend)s
+reintento máximo = 1
+[administrador directo]
+ruta de registro = /var/log/directadmin/login.log
+puerto = 2222
+[entrada de puerto]
+ruta de registro = /var/lib/portsentry/portsentry.historia
+reintento máximo = 1
+[pass2allow-ftp]
+# este ejemplo de pass2allow permite el tráfico FTP después de una autenticación HTTP exitosa
+puerto = ftp,ftp-datos,ftps,ftps-datos
+# La variable knocking_url debe anularse con algún valor secreto en filter.d/apache-pass.local
+filtro = paso apache
+# registro de acceso al sitio web con autenticación HTTP
+ruta de registro = %(apache_access_log)s
+tipo de bloque = RETORNO
+tipo de retorno = DROP
+bantime = 3600
+reintento máximo = 1
+tiempo de búsqueda = 1
+[murmullo]
+puerto = 64738
+acción = %(banaction)s[nombre=%(__name__)s-tcp, puerto="%(puerto)s", protocolo=tcp, cadena="%(chain)s", nombreact=%(banaction)s- TCP]
+           %(banaction)s[nombre=%(__name__)s-udp, puerto="%(puerto)s", protocolo=udp, cadena="%(chain)s", actname=%(banaction)s-udp]
+ruta de registro = /var/log/mumble-server/mumble-server.log
+[compartir pantalla]
+ruta de registro = /var/log/system.log
+codificación logen = utf-8
+[haproxy-http-autenticación]
+ruta de registro = /var/log/haproxy.log' >> /etc/fail2ban/jail.local
+
+
+[[ -e $HOME/fail2ban ]] && rm $HOME/fail2ban
+[[ -d $HOME/fail2ban-0.11.2 ]] && rm -rf $HOME/fail2ban-0.11.2
+
+cd
+reinicio del servicio fail2ban
+fi
