@@ -5,6 +5,9 @@ bar3="\033[0;31m---------------------------------------------\033[0m"
 bar4="\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 bar5="\033[0;31m==================================================\033[0m"
 bar6="\033[0;31m--------------------------------------------------\033[0m"
+bar7="\033[0;31m--------------------------------------------------------\033[0m"
+bar8="\033[0;31m========================================================\033[0m"
+
 #====================================================
 #	@jorgemodxd
 #====================================================
@@ -192,7 +195,7 @@ echo -e $bar5
     echo -e $bar5
     echo -e "\E[3;92m            ELIMINAR USUARIO | UUID V2RAY             \E[0m"
     echo -e $bar5
-    echo -e "\e[97m               USUARIOS REGISTRADOS     | USERS"
+    echo -e "\e[97m               USUARIOS REGISTRADOS    |  USERS"
     echo -e $bar6
     echo -e "\e[33m$(cat /etc/SSHPlus/RegV2ray|cut -d '|' -f2,1)" 
     echo -e $bar5
@@ -220,9 +223,9 @@ echo -e $bar5
     mosusr_kk() {
     clear 
     clear
-    echo -e $bar5
+    echo -e $bar8
     echo -e "\E[3;92m            USUARIOS REGISTRADOS | UUID V2RAY             \E[0m"
-    echo -e $bar5
+    echo -e $bar8
     # usersss=$(cat /etc/SSHPlus/RegV2ray|cut -d '|' -f1)
     # cat /etc/SSHPlus/RegV2ray|cut -d'|' -f3
     VPSsec=$(date +%s)
@@ -236,10 +239,8 @@ echo -e $bar5
     fun_v2raymanager
     else
     i=1
-    echo ""
-    echo -e $bar6
     echo -e "\e[97m                 UUID                | USER | EXPIRACION \e[93m"
-    echo -e $bar6
+    echo -e $bar7
     while read hostreturn ; do
     DateExp="$(cat /etc/SSHPlus/RegV2ray|grep -w "$hostreturn"|cut -d'|' -f3)"
     if [[ ! -z $DateExp ]]; then             
@@ -262,7 +263,7 @@ echo -e $bar5
     	      echo -e "$contador_secuencial \n USUARIOS REGISTRADOS: $linesss"
     	}
     fi
-    echo -e $bar5
+    echo -e $bar8
     echo -e "\033[1;37m• \033[1;33mEnter Para Continuar\033[1;31m" && read enter
     fun_v2raymanager
     }
