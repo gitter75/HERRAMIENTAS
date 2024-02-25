@@ -190,12 +190,13 @@ echo -e $bar5
     fun_v2raymanager
     }
     echo -e $bar5
-    echo -e "\E[44;1;37m            ELIMINAR USUARIO | UUID V2RAY             \E[0m"
+    echo -e "\E[3;92m            ELIMINAR USUARIO | UUID V2RAY             \E[0m"
     echo -e $bar5
-    echo -e "\e[97m               USUARIOS REGISTRADOS"
+    echo -e "\e[97m               USUARIOS REGISTRADOS     | USERS"
+    echo -e $bar6
     echo -e "\e[33m$(cat /etc/SSHPlus/RegV2ray|cut -d '|' -f2,1)" 
     echo -e $bar5
-    echo -ne "\e[91m >> Digita UUID para eliminar:\n \033[1;92m " && read uuidel
+    echo -ne "\e[91m >> ESCRIBA EL UUID A ELIMINAR:\n \033[1;92m " && read uuidel
     [[ $(sed -n '/'${uuidel}'/=' /etc/v2ray/config.json|head -1) ]] || invaliduuid
     lineP=$(sed -n '/'${uuidel}'/=' /etc/v2ray/config.json)
     linePre=$(sed -n '/'${uuidel}'/=' /etc/SSHPlus/RegV2ray)
@@ -209,9 +210,9 @@ echo -e $bar5
     sed -i "${resta}d" /etc/v2ray/config.json
     v2ray restart > /dev/null 2>&1
     echo ""
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    echo -e "\e[92m           UUID ELIMINADO COM EXITO "
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
+    echo -e "\e[92m           UUID ELIMINADO CON EXITO "
+    echo -e $bar5
     echo -e "\033[1;37m• \033[1;33mEnter Para Continuar\033[1;31m" && read enter
     fun_v2raymanager
     }
@@ -219,9 +220,9 @@ echo -e $bar5
     mosusr_kk() {
     clear 
     clear
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    echo -e "\E[44;1;37m            USUARIOS REGISTRADOS | UUID V2RAY             \E[0m"
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
+    echo -e "\E[3;92m            USUARIOS REGISTRADOS | UUID V2RAY             \E[0m"
+    echo -e $bar5
     # usersss=$(cat /etc/SSHPlus/RegV2ray|cut -d '|' -f1)
     # cat /etc/SSHPlus/RegV2ray|cut -d'|' -f3
     VPSsec=$(date +%s)
@@ -235,8 +236,10 @@ echo -e $bar5
     fun_v2raymanager
     else
     i=1
+    echo ""
+    echo -e $bar6
     echo -e "\e[97m                 UUID                | USER | EXPIRACION \e[93m"
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar6
     while read hostreturn ; do
     DateExp="$(cat /etc/SSHPlus/RegV2ray|grep -w "$hostreturn"|cut -d'|' -f3)"
     if [[ ! -z $DateExp ]]; then             
@@ -256,10 +259,10 @@ echo -e $bar5
     done <<< "$IDEUUID"
     [[ ! -z $contador_secuencial ]] && {
     linesss=$(cat /etc/SSHPlus/RegV2ray | wc -l)
-    	      echo -e "$contador_secuencial \n Numero de Registrados: $linesss"
+    	      echo -e "$contador_secuencial \n USUARIOS REGISTRADOS: $linesss"
     	}
     fi
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
     echo -e "\033[1;37m• \033[1;33mEnter Para Continuar\033[1;31m" && read enter
     fun_v2raymanager
     }
@@ -437,13 +440,13 @@ echo -e $bar5
     statgen="$(echo $PID_GEN)"
     clear 
     clear
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    echo -e "\E[44;1;37m            ELIMINAR EXPIRADOS | UUID V2RAY             \E[0m"
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
+    echo -e "\E[3;92m            ELIMINAR EXPIRADOS | UUID V2RAY             \E[0m"
+    echo -e $bar5
     echo ""
     echo -e "                    $statgen " 
     echo "" 						
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
     echo -e "\033[1;37m• \033[1;33mEnter Para Continuar\033[1;31m" && read enter
     fun_v2raymanager
 
@@ -465,14 +468,14 @@ echo -e $bar5
     [[ ! $PID_GEN ]] && PID_GEN="\e[91m [ DESATIVADO ] " || PID_GEN="\e[92m [ ATIVADO ] "
     statgen="$(echo $PID_GEN)"
     #SPR & 
-    echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e $bar5
 
     fun_v2raymanager() {
 		while true $x != "ok"; do
 			[[ ! -e '/home/sshplus' ]] && exit 0
 			clear
 			echo -e $bar4
-            echo -e "\E[3;92m    >>>>   ADMINISTRADOR DE USUARIOS V2RAY   <<<<          \E[0m"
+            echo -e "\E[3;92m  >>>>   ADMINISTRADOR DE USUARIOS V2RAY   <<<<          \E[0m"
             echo -e $bar4
 			xv2ray1=`if netstat -tunlp |grep v2ray 1> /dev/null 2> /dev/null; then
 			echo -e "\e[92m ATIVADO"
