@@ -260,7 +260,7 @@ echo -e $bar5
     done <<< "$IDEUUID"
     [[ ! -z $contador_secuencial ]] && {
     linesss=$(cat /etc/SSHPlus/RegV2ray | wc -l)
-    echo -e $bar7
+              echo -e $bar7
     	      echo -e "$contador_secuencial \n USUARIOS REGISTRADOS: $linesss"
     	}
     fi
