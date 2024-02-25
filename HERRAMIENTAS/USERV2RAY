@@ -472,7 +472,7 @@ echo -e $bar5
 			[[ ! -e '/home/sshplus' ]] && exit 0
 			clear
 			echo -e $bar4
-            echo -e "\E[3;32m          >>>>   ADMINISTRADOR DE USUARIOS V2RAY   <<<<          \E[0m"
+            echo -e "\E[3;92m    >>>>   ADMINISTRADOR DE USUARIOS V2RAY   <<<<          \E[0m"
             echo -e $bar4
 			xv2ray1=`if netstat -tunlp |grep v2ray 1> /dev/null 2> /dev/null; then
 			echo -e "\e[92m ATIVADO"
