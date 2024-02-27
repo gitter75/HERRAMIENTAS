@@ -178,9 +178,9 @@ echo -e $bar
 #PANEL AJUSTES INTERNOS
 clear
 gestor_fun (){
-echo -e $bar4
+echo -e "\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "\E[3;32m          >>>>   AJUSTES INTERNOS   <<<<          \E[0m"
-echo -e $bar4
+echo -e "\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo -e "\033[1;31m[\033[1;36m1\033[1;31m] \033[1;37m• \033[1;33mACTUALIZAR VPS"
 echo -e "\033[1;31m[\033[1;36m2\033[1;31m] \033[1;37m• \033[1;33mREINICIAR SERVICIOS"
 echo -e "\033[1;31m[\033[1;36m3\033[1;31m] \033[1;37m• \033[1;33mREINICIAR VPS"
@@ -189,7 +189,7 @@ echo -e "\033[1;31m[\033[1;36m5\033[1;31m] \033[1;37m• \033[1;33mCAMBIAR CONTR
 echo -e "\033[1;31m[\033[1;36m6\033[1;31m] \033[1;37m• \033[1;33mCAMBIAR LA HORA A MX"
 echo -e "\033[1;31m[\033[1;36m7\033[1;31m] \033[1;37m• \033[1;33mCAMBIAR LA HORA A ARG"
 echo -e "\033[1;31m[\033[1;36m0\033[1;31m] \033[1;37m• \e[97m\033[1;41mVOLVER"
-echo -e $bar4
+echo -e "\033[0;31m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo ""
 echo -ne "\033[1;32m➜ INGRESE UNA OPCION: \033[1;37m "
 
