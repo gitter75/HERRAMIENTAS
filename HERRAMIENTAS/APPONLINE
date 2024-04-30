@@ -242,7 +242,7 @@ case $option in
 
       1) 
          clear
-         apponline
+         onlineapp
          echo -ne "Enter Para Continuar" && read enter
          clear
          gestor_fun ;;
